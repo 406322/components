@@ -1,18 +1,8 @@
 import './teaser-item.js';
-
-const filterData = (allData) => {
-  const filteredData = []
-  allData._embedded.forEach(element => {
-    if (typeof element._embedded.relations === 'undefined') return
-    if (typeof element._embedded.relations[0].fields.versions === 'undefined') return
-    filteredData.push({ title: element.title, image: element._embedded.relations[0].fields.versions.large.url })
-  })
-  return filteredData
-}
+import { getData, filterData } from './functions.js';
 
 const teaserElement = document.getElementById('teasers');
 teaserElement.posts = []
-
 
 export class TeaserList extends HTMLElement {
   #posts = [];
@@ -28,13 +18,10 @@ export class TeaserList extends HTMLElement {
 
   async connectedCallback() {
     const avis = this.getAttribute("param-publication")
-    console.log(avis)
     const url = `https://services.api.no/api/acpcomposer/v1.1/search/content/?publicationDomain=${avis}&sort=lastPublishedDate&types=story`
-    console.log(url)
-    const response = await fetch(url);
-    const json = await response.json();
-    const result = filterData(json)
-    this.#posts = result
+    const data = await getData(url)
+    const filteredData = filterData(data)
+    this.#posts = filteredData
     this.render();
   }
 
