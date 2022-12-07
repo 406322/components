@@ -17,8 +17,8 @@ export class TeaserList extends HTMLElement {
   }
 
   async connectedCallback() {
-    const avis = this.getAttribute("param-publication")
-    const url = `https://services.api.no/api/acpcomposer/v1.1/search/content/?publicationDomain=${avis}&sort=lastPublishedDate&types=story`
+    const publication = this.getAttribute("param-publication")
+    const url = `https://services.api.no/api/acpcomposer/v1.1/search/content/?publicationDomain=${publication}&sort=lastPublishedDate&types=story`
     const data = await getData(url)
     const filteredData = filterData(data)
     this.#posts = filteredData
@@ -47,7 +47,7 @@ export class TeaserList extends HTMLElement {
             ${this.#posts.map(post => `
               <teaser-item
                 title="${post.title}"
-                image="${post.image || ''}"
+                image="${post.image}"
                 >
               </teaser-item>
             `).join('\n')}
