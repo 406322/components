@@ -1,33 +1,28 @@
 export class TeaserItem extends HTMLElement {
-  title = '';
-  image = '';
-  
-  constructor() {
-    super();
-    
-    this.attachShadow({mode: 'open'});
-  }
-  
-  static get observedAttributes() {
-    return ['title', 'image'];
-  }
-  
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (this.isConnected) {
-      switch (name) {
-        case 'title':
-          this.title = newValue || 'NO TITLE';
-          break;
-        case 'image':
-          this.image = newValue || '';
-          break;
-      }
-      this.render()
+    constructor() {
+        super();
+        this.title = '';
+        this.image = '';
+        this.attachShadow({ mode: 'open' });
     }
-  }
-  
-  get style() {
-    return `
+    static get observedAttributes() {
+        return ['title', 'image'];
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (this.isConnected) {
+            switch (name) {
+                case 'title':
+                    this.title = newValue || 'NO TITLE';
+                    break;
+                case 'image':
+                    this.image = newValue || '';
+                    break;
+            }
+            this.render();
+        }
+    }
+    get css() {
+        return `
         <style>
             .card {
               width: 25rem;
@@ -43,21 +38,19 @@ export class TeaserItem extends HTMLElement {
               font-family: "gsb", sans-serif;
             }
         </style>
-      `
-  }
-  
-  get template() {
-    return `
+      `;
+    }
+    get template() {
+        return `
         <div class="card">
-                ${this.image ? `<img src="${this.image}" alt="${this.title}">` : ''}
+          <img src="${this.image}" alt="${this.title}">}
            <h2>${this.title}</h2>
         </div>
-      `
-  }
-  
-  render() {
-    this.shadowRoot.innerHTML = `${this.style}${this.template}`;
-  }
+      `;
+    }
+    render() {
+        if (this.shadowRoot)
+            this.shadowRoot.innerHTML = `${this.css}${this.template}`;
+    }
 }
-
 customElements.define('teaser-item', TeaserItem);
